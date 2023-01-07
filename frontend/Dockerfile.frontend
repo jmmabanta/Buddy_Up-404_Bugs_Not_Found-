@@ -1,16 +1,8 @@
 FROM node:lts-alpine
-
-# Create directory for app
 WORKDIR /usr/src/app
-
-# Install app dependencies
 COPY package*.json .
 COPY yarn.lock .
-
 RUN yarn install
-
-# Add the rest of the app
 COPY . .
-
 EXPOSE 8000
-CMD ["/bin/bash", "-c", "npm install; npm start"]
+CMD npm install; npm start
