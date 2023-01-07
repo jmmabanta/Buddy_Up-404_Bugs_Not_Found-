@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+
+#homepage {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+}

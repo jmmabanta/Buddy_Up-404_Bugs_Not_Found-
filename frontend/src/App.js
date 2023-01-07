@@ -14,12 +14,14 @@ function App() {
 
 class HomePage extends React.Component {
     signIn(response) {
-	console.log("WIP")
+	axios.get("localhost:8000/login/").then(response => {
+	    console.log(response)
+	})
     }
 
     render() {
 	return (
-	 <main>
+	 <main id="homepage">
 	     <h1>BuddyUp</h1>
 	     <p id="siteDesc--p">A modern study buddy finder using cutting machine learning quantum computing algorithms to give you the most compatiable study buddies EVER.</p>
 	     <button onClick={this.signIn}>Sign In</button>
@@ -27,8 +29,6 @@ class HomePage extends React.Component {
 	)
     }
 }
-
-
 
 
 class ScheduleForm extends React.Component {
@@ -83,4 +83,6 @@ class ScheduleForm extends React.Component {
     }
 }
 
+
 export default App
+
