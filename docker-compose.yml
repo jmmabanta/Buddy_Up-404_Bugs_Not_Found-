@@ -18,6 +18,7 @@ services:
       - PORT=3000
     ports:
       - 3000:3000
+    entrypoint: "npm install && npm start"
   frontend:
     build:
       context: ./frontend
@@ -29,6 +30,7 @@ services:
       - PORT=8000
     ports:
       - 8000:8000
+    entrypoint: "npm install && npm start"
 
 volumes:
   dbData:

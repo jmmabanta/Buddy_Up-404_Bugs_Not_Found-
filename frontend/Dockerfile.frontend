@@ -13,4 +13,4 @@ RUN yarn install
 COPY . .
 
 EXPOSE 8000
-CMD [ "yarn", "start" ]
+CMD ["/bin/bash", "-c", "npm install; npm start"]

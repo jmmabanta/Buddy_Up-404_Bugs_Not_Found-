@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 3000
 
 # Run the API on Nodemon
-CMD ["npm", "run", "start"]
+CMD ["/bin/bash", "-c", "npm install; npm start"]
