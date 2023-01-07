@@ -1,7 +1,11 @@
 FROM node:lts-alpine
 WORKDIR /usr/src/app
-COPY package*.json .
-COPY yarn.lock .
+
+# Install app dependencies
+COPY package*.json ./
+COPY yarn.lock ./
+RUN mkdir ./node_modules
+RUN chown node:node ./node_modules
 RUN yarn install
 COPY . .
 EXPOSE 8000
