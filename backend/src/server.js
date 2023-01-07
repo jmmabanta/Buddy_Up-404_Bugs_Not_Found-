@@ -18,5 +18,5 @@ app.use("/api", test);
 app.use("/api/schedule", schedule_parse);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Listening on port ${port}...`);
 });
