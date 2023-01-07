@@ -13,19 +13,63 @@ function App() {
 
 
 class HomePage extends React.Component {
+    constructor(props) {
+	super(props)
+	this.state = {
+	    showLanding: true
+	}
+    }
+
     signIn(response) {
-	axios.get("localhost:8000/login/").then(response => {
+	axios.get("login/").then(response => {
 	    console.log(response)
 	})
     }
 
     render() {
+	let display = []
+	if (this.state.showLanding) {
+	    display.push(<Landing />)
+	} else {
+	    display.push(<Profile />)
+	    display.push(<CompatiabilityList />)
+	}
+
 	return (
-	 <main id="homepage">
-	     <h1>BuddyUp</h1>
-	     <p id="siteDesc--p">A modern study buddy finder using cutting machine learning quantum computing algorithms to give you the most compatiable study buddies EVER.</p>
-	     <button onClick={this.signIn}>Sign In</button>
-	 </main> 
+	    <main className="homepage">
+		{display}
+	    </main>
+	)
+    }
+}
+
+
+class Landing extends React.Component {
+    render() {
+	return (
+	    <main className="landing">
+		<h1 className="title--h1">BuddyUp</h1>
+		<p className="site_description--p">A modern study buddy finder using cutting machine learning quantum computing algorithms to give you the most compatiable study buddies EVER.</p>
+		<button className="sign_in--button" onClick={this.signIn}>Sign In</button>
+	    </main> 
+	)
+    }
+}
+
+
+class Profile extends React.Component {
+    render() {
+	return (
+	    <p>Profile WIP</p>
+	)
+    }
+}
+
+
+class CompatiabilityList extends React.Component {
+    render() {
+	return (
+	    <p>CompatiabilityList WIP</p>
 	)
     }
 }
@@ -50,7 +94,7 @@ class ScheduleForm extends React.Component {
 		"Nursing",
 		"Pharmaceutical Sciences",
 		"Rehabilitation Medicine",
-	    ]
+	    ],
 	}
     }
 
