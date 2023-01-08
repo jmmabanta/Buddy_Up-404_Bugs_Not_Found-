@@ -9,13 +9,11 @@ const authClient = new OAuth2Client(
 // Given JWT token, get user data
 // (yes, the security is kinda bad...)
 const getUserData = async (id_token) => {
-  console.log("test");
   const ticket = await authClient.verifyIdToken({
     idToken: id_token,
     audience: process.env.GOOGLE_CLIENT_ID,
   });
   const userData = ticket.getPayload();
-  console.log(userData);
   return userData;
 };
 

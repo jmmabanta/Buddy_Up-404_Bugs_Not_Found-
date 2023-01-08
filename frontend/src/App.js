@@ -1,8 +1,9 @@
 import logo from "./logo.svg";
 import "./App.css";
-import React, { useState, Component } from "react";
+import React, { useState, useEffect, Component } from "react";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
+
 
 function App() {
   return (
@@ -12,21 +13,6 @@ function App() {
   );
 }
 
-const LoginButton = () => {
-  // From: https://github.com/MomenSherif/react-oauth/issues/12#issuecomment-1131408898
-  // Exchange Google OAuth tokens with Express Backend
-  const login = useGoogleLogin({
-    onSuccess: async ({ code }) => {
-      const userData = await axios.post("/login", {
-        code,
-      });
-      console.log(userData);
-    },
-    onError: (err) => console.err(err),
-    flow: "auth-code",
-  });
-  return <button onClick={() => login()}>Sign In With Google</button>;
-};
 
 const showStates = {
     landing: 1,
@@ -36,60 +22,48 @@ const showStates = {
 
 
 function HomePage() {
+    const [show, setShow] = useState(showStates.landing)
+    const [user, setUser] = useState(undefined)
     
-}
+    const login = useGoogleLogin({
+	onSuccess: async ({ code }) => {
+	    const userData = await axios.post("/login", {
+		code,
+	    })
+	    console.log(userData)
+	    setUser({
+		token: userData.data.token,
+		email: userData.data.email,
+		name: userData.data.name,
+		picture: userData.data.picture
+	    })
+	    setShow(showStates.form)
+	},
+	onError: (err) => console.err(err),
+	flow: "auth-code",
+    })
 
-class HomePage extends Component {
-    constructor(props) {
-	super(props)
-	this.state = {
-	    show: showStates.landing
-	}
-	this.changeShow = this.changeShow.bind(this)
-	this.signIn = this.signIn.bind(this)
+    let display = []
+    switch (show) {
+    case showStates.landing:
+	display.push(<Landing signIn={() => login()} />)
+	break
+    case showStates.form:
+	display.push(<ScheduleForm onSuccess={(newShow) => setShow(newShow)} token={user.token} />)
+	break
+    case showStates.results:
+	display.push(<Profile />)
+	display.push(<CompatiabilityList />)
+	break
+    default:
+	display.push(<p>404</p>)
     }
 
-    signIn(response) {
-	useGoogleLogin({
-	    onSuccess: async ({ code }) => {
-		const userData = await axios.post("/login", {
-		    code,
-		});
-		console.log(userData);
-	    },
-	    onError: (err) => console.err(err),
-	    flow: "auth-code",
-	})()
-    }
-
-    changeShow(newState) {
-	this.setState({show: newState})
-    }
-
-    render() {
-	let display = []
-
-	switch (this.state.show) {
-	case showStates.landing:
-	    display.push(<Landing signIn={this.signIn} />)
-	    break
-	case showStates.form:
-	    display.push(<ScheduleForm onSuccess={this.changeShow} />)
-	    break
-	case showStates.results:
-	    display.push(<Profile />)
-	    display.push(<CompatiabilityList />)
-	    break
-	default:
-	    display.push(<p>404</p>)
-	}
-
-	return (
-	    <main className="homepage">
-		{display}
-	    </main>
-	)
-    }
+    return (
+	<main className="homepage">
+	    {display}
+	</main>
+    )
 }
 
 
@@ -173,11 +147,15 @@ class ScheduleForm extends Component {
 	    const data = new FormData()
 	    data.append("schedule", inputFile)
 	    data.append("faculty", this.state.faculty)
+	    console.log(this.props.token)
 	    axios({
 		method: "post",
-		url: "/api/schedule/upload",
+		url: "/schedule/upload",
 		data,
-		headers: { "Content-Type": "multipart/form-data" },
+		headers: {
+		    "Content-Type": "multipart/form-data",
+		    "Authorization": this.props.token
+		},
 	    }).then(res => {
 		this.props.onSuccess(showStates.results)
 	    }).catch(err => {
