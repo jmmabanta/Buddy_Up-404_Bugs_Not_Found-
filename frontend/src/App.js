@@ -39,19 +39,23 @@ function HomePage() {
     const [show, setShow] = useState(showStates.landing)
     const [user, setUser] = useState(undefined)
 
+    function onSuccess(userData) {
+	setUser({
+	    token: userData.token,
+	    email: userData.email,
+	    name: userData.name,
+	    picture: userData.picture
+	})
+	setShow(showStates.form)
+    }
+    
     const login = useGoogleLogin({
 	onSuccess: async ({ code }) => {
 	    const userData = await axios.post("/login", {
 		code,
 	    })
 	    console.log(userData)
-	    setUser({
-		token: userData.token,
-		email: userData.email,
-		name: userData.name,
-		picture: userData.picture
-	    })
-	    setShow(showStates.form)
+	    onSuccess(userData)
 	},
 	onError: (err) => console.err(err),
 	flow: "auth-code",
