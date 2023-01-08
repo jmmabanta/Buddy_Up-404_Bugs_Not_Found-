@@ -38,16 +38,6 @@ const showStates = {
 function HomePage() {
     const [show, setShow] = useState(showStates.landing)
     const [user, setUser] = useState(undefined)
-
-    function onSuccess(userData) {
-	setUser({
-	    token: userData.token,
-	    email: userData.email,
-	    name: userData.name,
-	    picture: userData.picture
-	})
-	setShow(showStates.form)
-    }
     
     const login = useGoogleLogin({
 	onSuccess: async ({ code }) => {
@@ -55,7 +45,13 @@ function HomePage() {
 		code,
 	    })
 	    console.log(userData)
-	    onSuccess(userData)
+	    setUser({
+		token: userData.data.token,
+		email: userData.data.email,
+		name: userData.data.name,
+		picture: userData.data.picture
+	    })
+	    setShow(showStates.form)
 	},
 	onError: (err) => console.err(err),
 	flow: "auth-code",
@@ -223,7 +219,7 @@ class ScheduleForm extends Component {
 	    console.log(this.props.token)
 	    axios({
 		method: "post",
-		url: "/api/schedule/upload",
+		url: "/schedule/upload",
 		data,
 		headers: {
 		    "Content-Type": "multipart/form-data",
