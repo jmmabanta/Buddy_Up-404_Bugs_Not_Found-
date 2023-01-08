@@ -9,6 +9,7 @@ app.use(cors({ credentials: true, origin: true }));
 const test = require("./routes/test");
 const schedule_parse = require("./routes/schedule_parse");
 const login = require("./routes/login");
+const { getUserData } = require("./util");
 
 app.use(
   fileUpload({
@@ -17,8 +18,22 @@ app.use(
 );
 
 app.use("/api", test);
-app.use("/api/schedule", schedule_parse);
 app.use("/login", login);
+
+// Protects the following routes so that a login is needed
+app.use((req, res, next) => {
+  if (!req.get("authorization"))
+    return res
+      .status(403)
+      .json({ err: "Authorization needed to access endpoint!" });
+  const userData = getUserData(req.get("authorization"));
+  if (userData == null)
+    return res.status(403).json({ err: "Invalid authorization!" });
+  next();
+});
+
+// THESE ROUTES REQUIRE LOGIN!
+app.use("/schedule", schedule_parse);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
