@@ -44,10 +44,16 @@
 }
 
 
-/* Homepage */
+.homepage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+
+/* Landing */
 .landing {
-    width: 100vw;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,3 +78,65 @@
     border-radius: 20px;
     border: solid 1px;
 }
+
+
+/* Schedule Form */
+.user_info--form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #d8d8d8;
+    max-width: 500px;
+    padding: 15px;
+    font-size: 15px;
+    border-radius: 3px;
+    box-shadow: 3px 3px 10px 1px gray;
+}
+
+.user_info--form label {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.user_info--form fieldset {
+    border: none;
+}
+
+.user_info--form input {
+    border: none;
+    padding: 5px;
+}
+
+.user_info--form span {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.user_info--form select {
+    padding: 5px; 
+    border-radius: 2px;
+}
+
+.user_info--form .name--fieldset {
+    display: flex;
+}
+
+.user_info--form .name--fieldset span {
+    display: flex;
+    margin: 0 10px;
+}
+
+.user_info--form .spacer--span {
+    padding: 10px;
+}
+
+.user_info--form .submit--button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+}
+
+
+
