@@ -38,13 +38,25 @@ function HomePage(props) {
 		code,
 	    })
 	    console.log(userData)
+	    const existingRecord = await axios.get("/user/mydata", {
+		method: "get",
+		url: "/user",
+		headers: {
+		    "Content-Type": "multipart/form-data",
+		    "Authorization": userData.data.token
+		},
+	    })
+
 	    setUser({
 		token: userData.data.token,
 		email: userData.data.email,
 		name: userData.data.name,
 		picture: userData.data.picture
 	    })
-	    setShow(showStates.form)
+
+	    console.log(existingRecord)
+	    const nextShowState = existingRecord.data.faculty == "" ? showStates.form : showStates.results
+	    setShow(nextShowState)
 	},
 	onError: (err) => console.err(err),
 	flow: "auth-code",
