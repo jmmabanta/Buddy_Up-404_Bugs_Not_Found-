@@ -9,6 +9,7 @@ app.use(cors({ credentials: true, origin: true }));
 const test = require("./routes/test");
 const schedule_parse = require("./routes/schedule_parse");
 const login = require("./routes/login");
+const user = require("./routes/user");
 const { getUserData } = require("./util");
 
 app.use(
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 
 // THESE ROUTES REQUIRE LOGIN!
 app.use("/schedule", schedule_parse);
+app.use("/user", user);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
