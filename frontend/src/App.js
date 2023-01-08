@@ -25,6 +25,7 @@ class HomePage extends React.Component {
 	this.state = {
 	    show: showStates.form
 	}
+	this.changeShow = this.changeShow.bind(this)
     }
 
     signIn(response) {
@@ -32,6 +33,10 @@ class HomePage extends React.Component {
 	//     console.log(response)
 	// })
 	console.log("WIP")
+    }
+
+    changeShow(newState) {
+	this.setState({show: newState})
     }
 
     render() {
@@ -42,7 +47,7 @@ class HomePage extends React.Component {
 	    display.push(<Landing signIn={this.signIn} />)
 	    break
 	case showStates.form:
-	    display.push(<ScheduleForm />)
+	    display.push(<ScheduleForm onSuccess={this.changeShow} />)
 	    break
 	case showStates.results:
 	    display.push(<Profile />)
@@ -75,6 +80,10 @@ class Landing extends React.Component {
 
 
 class Profile extends React.Component {
+    constructor(props) {
+	super(props)
+    }
+
     render() {
 	return (
 	    <p>Profile WIP</p>
@@ -84,6 +93,10 @@ class Profile extends React.Component {
 
 
 class CompatiabilityList extends React.Component {
+    constructor(props) {
+	super(props)
+    }
+
     render() {
 	return (
 	    <p>CompatiabilityList WIP</p>
@@ -140,7 +153,7 @@ class ScheduleForm extends React.Component {
 		data,
 		headers: { "Content-Type": "multipart/form-data" },
 	    }).then(res => {
-		console.log(res)
+		this.props.onSuccess(showStates.results)
 	    }).catch(err => {
 		console.error(err)
 	    })
@@ -163,7 +176,7 @@ class ScheduleForm extends React.Component {
 		<span>
 		    <label>Faculty</label>
 		    <select name="faculty" id="faculty--select" onChange={this.inputChange}>
-			<option disabled> -- select an option -- </option>
+			<option disabled selected> -- select an option -- </option>
 			{optionElements}
 		    </select>
 		</span>
