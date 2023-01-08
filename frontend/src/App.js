@@ -4,6 +4,7 @@ import React, { useState, useEffect, Component } from "react";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 
+
 function App() {
   return (
     <div className="App">
@@ -12,21 +13,6 @@ function App() {
   );
 }
 
-const LoginButton = () => {
-  // From: https://github.com/MomenSherif/react-oauth/issues/12#issuecomment-1131408898
-  // Exchange Google OAuth tokens with Express Backend
-  const login = useGoogleLogin({
-    onSuccess: async ({ code }) => {
-      const userData = await axios.post("/login", {
-        code,
-      });
-      console.log(userData);
-    },
-    onError: (err) => console.err(err),
-    flow: "auth-code",
-  });
-  return <button onClick={() => login()}>Sign In With Google</button>;
-};
 
 const showStates = {
     landing: 1,
@@ -79,61 +65,6 @@ function HomePage() {
 	</main>
     )
 }
-
-
-
-// class HomePage extends Component {
-//     constructor(props) {
-// 	super(props)
-// 	this.state = {
-// 	    show: showStates.landing
-// 	}
-// 	this.changeShow = this.changeShow.bind(this)
-// 	this.signIn = this.signIn.bind(this)
-//     }
-
-//     signIn(response) {
-// 	// useGoogleLogin({
-// 	//     onSuccess: async ({ code }) => {
-// 	// 	const userData = await axios.post("/login", {
-// 	// 	    code,
-// 	// 	});
-// 	// 	console.log(userData);
-// 	//     },
-// 	//     onError: (err) => console.err(err),
-// 	//     flow: "auth-code",
-// 	// })()
-//     }
-
-//     changeShow(newState) {
-// 	this.setState({show: newState})
-//     }
-
-//     render() {
-// 	let display = []
-
-// 	switch (this.state.show) {
-// 	case showStates.landing:
-// 	    display.push(<Landing signIn={this.signIn} />)
-// 	    break
-// 	case showStates.form:
-// 	    display.push(<ScheduleForm onSuccess={this.changeShow} />)
-// 	    break
-// 	case showStates.results:
-// 	    display.push(<Profile />)
-// 	    display.push(<CompatiabilityList />)
-// 	    break
-// 	default:
-// 	    display.push(<p>404</p>)
-// 	}
-
-// 	return (
-// 	    <main className="homepage">
-// 		{display}
-// 	    </main>
-// 	)
-//     }
-// }
 
 
 class Landing extends Component {
