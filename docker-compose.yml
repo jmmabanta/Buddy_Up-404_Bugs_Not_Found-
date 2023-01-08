@@ -16,6 +16,8 @@ services:
       - /usr/src/app/node_modules
     environment:
       - PORT=3000
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     ports:
       - 3000:3000
   frontend:
@@ -27,6 +29,7 @@ services:
       - /usr/src/app/node_modules
     environment:
       - PORT=8000
+      - REACT_APP_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
     ports:
       - 8000:8000
 
