@@ -2,7 +2,6 @@ import logo from "./logo.svg"
 import "./App.css"
 import React from "react"
 import axios from "axios"
-import ical from "ical"
 
 function App() {
     return (
@@ -129,20 +128,24 @@ class ScheduleForm extends React.Component {
     onSubmit(event) {
 	event.preventDefault()
 	// TODO display error when user enters more than one file.
-	if (this.fileInput.current.files.length > 0) {
-	    const inputFilename = this.fileInput.current.files[0].name
-	    parseFile(inputFilename)
-	}
-    }
+	console.log("Submitting...")
+	if (this.fileInput.current.files.length > 0 && this.state.faculty != undefined) {
+	    const inputFile = this.fileInput.current.files[0]
+	    const data = new FormData()
+	    data.append("schedule", inputFile)
+	    data.append("faculty", this.state.faculty)
+	    axios({
+		method: "post",
+		url: "/api/schedule/upload",
+		data,
+		headers: { "Content-Type": "multipart/form-data" },
+	    }).then(res => {
+		console.log(res)
+	    }).catch(err => {
+		console.error(err)
+	    })
 
-    parseFile(filename) {
-	const reader = new FileReader()
-	reader.onload = (e) => {
-	    const content = ical.parseICS(reader.result)
-	    // TODO parse ical data into format for backend.
 	}
-
-	reader.readAsText(filename)
     }
 
     render() {
@@ -157,14 +160,10 @@ class ScheduleForm extends React.Component {
 
 	return (
 	    <form className="user_info--form" onSubmit={this.onSubmit}>
-		<fieldset className="name--fieldset">
-		    <span><label>First Name</label><input name="firstName" onChange={this.inputChange} /></span>
-		    <span><label>Last Name</label><input name="lastName" onChange={this.inputChange} /></span>
-		</fieldset>
-		<span className="spacer--span"></span>
 		<span>
 		    <label>Faculty</label>
 		    <select name="faculty" id="faculty--select" onChange={this.inputChange}>
+			<option disabled> -- select an option -- </option>
 			{optionElements}
 		    </select>
 		</span>
