@@ -63,7 +63,7 @@ function HomePage() {
 	display.push(<Landing signIn={() => login()} />)
 	break
     case showStates.form:
-	display.push(<ScheduleForm onSuccess={(newShow) => setShow(newShow)} />)
+	display.push(<ScheduleForm onSuccess={(newShow) => setShow(newShow)} token={user.token} />)
 	break
     case showStates.results:
 	display.push(<Profile />)
@@ -216,11 +216,15 @@ class ScheduleForm extends Component {
 	    const data = new FormData()
 	    data.append("schedule", inputFile)
 	    data.append("faculty", this.state.faculty)
+	    console.log(this.props.token)
 	    axios({
 		method: "post",
 		url: "/api/schedule/upload",
 		data,
-		headers: { "Content-Type": "multipart/form-data" },
+		headers: {
+		    "Content-Type": "multipart/form-data",
+		    "Authorization": this.props.token
+		},
 	    }).then(res => {
 		this.props.onSuccess(showStates.results)
 	    }).catch(err => {
