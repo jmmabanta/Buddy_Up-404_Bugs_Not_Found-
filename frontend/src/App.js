@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import React, { useState, Component } from "react";
+import React, { useState, useEffect, Component } from "react";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 
@@ -36,61 +36,104 @@ const showStates = {
 
 
 function HomePage() {
-    
+    const [show, setShow] = useState(showStates.landing)
+    const [user, setUser] = useState(undefined)
+
+    const login = useGoogleLogin({
+	onSuccess: async ({ code }) => {
+	    const userData = await axios.post("/login", {
+		code,
+	    })
+	    console.log(userData)
+	    setUser({
+		token: userData.token,
+		email: userData.email,
+		name: userData.name,
+		picture: userData.picture
+	    })
+	    setShow(showStates.form)
+	},
+	onError: (err) => console.err(err),
+	flow: "auth-code",
+    })
+
+    let display = []
+    switch (show) {
+    case showStates.landing:
+	display.push(<Landing signIn={() => login()} />)
+	break
+    case showStates.form:
+	display.push(<ScheduleForm onSuccess={(newShow) => setShow(newShow)} />)
+	break
+    case showStates.results:
+	display.push(<Profile />)
+	display.push(<CompatiabilityList />)
+	break
+    default:
+	display.push(<p>404</p>)
+    }
+
+    return (
+	<main className="homepage">
+	    {display}
+	</main>
+    )
 }
 
-class HomePage extends Component {
-    constructor(props) {
-	super(props)
-	this.state = {
-	    show: showStates.landing
-	}
-	this.changeShow = this.changeShow.bind(this)
-	this.signIn = this.signIn.bind(this)
-    }
 
-    signIn(response) {
-	useGoogleLogin({
-	    onSuccess: async ({ code }) => {
-		const userData = await axios.post("/login", {
-		    code,
-		});
-		console.log(userData);
-	    },
-	    onError: (err) => console.err(err),
-	    flow: "auth-code",
-	})()
-    }
 
-    changeShow(newState) {
-	this.setState({show: newState})
-    }
+// class HomePage extends Component {
+//     constructor(props) {
+// 	super(props)
+// 	this.state = {
+// 	    show: showStates.landing
+// 	}
+// 	this.changeShow = this.changeShow.bind(this)
+// 	this.signIn = this.signIn.bind(this)
+//     }
 
-    render() {
-	let display = []
+//     signIn(response) {
+// 	// useGoogleLogin({
+// 	//     onSuccess: async ({ code }) => {
+// 	// 	const userData = await axios.post("/login", {
+// 	// 	    code,
+// 	// 	});
+// 	// 	console.log(userData);
+// 	//     },
+// 	//     onError: (err) => console.err(err),
+// 	//     flow: "auth-code",
+// 	// })()
+//     }
 
-	switch (this.state.show) {
-	case showStates.landing:
-	    display.push(<Landing signIn={this.signIn} />)
-	    break
-	case showStates.form:
-	    display.push(<ScheduleForm onSuccess={this.changeShow} />)
-	    break
-	case showStates.results:
-	    display.push(<Profile />)
-	    display.push(<CompatiabilityList />)
-	    break
-	default:
-	    display.push(<p>404</p>)
-	}
+//     changeShow(newState) {
+// 	this.setState({show: newState})
+//     }
 
-	return (
-	    <main className="homepage">
-		{display}
-	    </main>
-	)
-    }
-}
+//     render() {
+// 	let display = []
+
+// 	switch (this.state.show) {
+// 	case showStates.landing:
+// 	    display.push(<Landing signIn={this.signIn} />)
+// 	    break
+// 	case showStates.form:
+// 	    display.push(<ScheduleForm onSuccess={this.changeShow} />)
+// 	    break
+// 	case showStates.results:
+// 	    display.push(<Profile />)
+// 	    display.push(<CompatiabilityList />)
+// 	    break
+// 	default:
+// 	    display.push(<p>404</p>)
+// 	}
+
+// 	return (
+// 	    <main className="homepage">
+// 		{display}
+// 	    </main>
+// 	)
+//     }
+// }
 
 
 class Landing extends Component {
