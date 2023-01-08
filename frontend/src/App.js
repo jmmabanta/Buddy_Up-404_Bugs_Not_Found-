@@ -8,9 +8,9 @@ import userNotFound from "./userNotFound"
 
 // API ENDPOINTS
 // ======================================================
-// /user - get all users.
-// /schedule/upload - upload form data here.
-
+// /user - get all users (GET).
+// /schedule/upload - upload form data here (POST).
+// /user/mydata - get personal data (GET).
 
 function App() {
   return (
@@ -28,7 +28,7 @@ const showStates = {
 }
 
 
-function HomePage() {
+function HomePage(props) {
     const [show, setShow] = useState(showStates.landing)
     const [user, setUser] = useState({})
     
@@ -63,16 +63,14 @@ function HomePage() {
 }
 
 
-class Landing extends Component {
-    render() {
+function Landing(props) {
 	return (
 	    <main className="landing--main">
 		<h1 className="title--h1">BuddyUp</h1>
 		<p className="site_description--p">A modern study buddy finder using cutting machine learning quantum computing algorithms to give you the most compatiable study buddies EVER.</p>
-		<button className="sign_in--button" onClick={this.props.signIn}>Sign In</button>
+		<button className="sign_in--button" onClick={props.signIn}>Sign In</button>
 	    </main> 
 	)
-    }
 }
 
 
@@ -145,92 +143,80 @@ function CompatiabilityList(props) {
 }
 
 
+function ScheduleForm(props) {
+    // State variables 
+    const [faculty, setFaculty] = useState(undefined)
 
-class ScheduleForm extends Component {
-    constructor(props) {
-	super(props)
-	this.state = {
-	    faculties: [ // Faculty options that can be selected from.
-		"Business",
-		"Arts",
-		"Education",
-		"Law",
-		"Agriculture",
-		"Environmental Sciences",
-		"Engineering",
-		"Science",
-		"Kinesiology",
-		"Recreation",
-		"Medicine",
-		"Nursing",
-		"Pharmaceutical Sciences",
-		"Rehabilitation Medicine",
-	    ],
-	}
+    // Faculty options that can be selected from.
+    const faculties = [ 
+	"Business",
+	"Arts",
+	"Education",
+	"Law",
+	"Agriculture",
+	"Environmental Sciences",
+	"Engineering",
+	"Science",
+	"Kinesiology",
+	"Recreation",
+	"Medicine",
+	"Nursing",
+	"Pharmaceutical Sciences",
+	"Rehabilitation Medicine",
+    ]
+    const fileInput = React.createRef();
 
-	this.inputChange = this.inputChange.bind(this)
-	this.onSubmit = this.onSubmit.bind(this)
-	this.fileInput = React.createRef();
-    }
-
-    inputChange(event) {
-	const change = {}
-	change[event.target.name] = event.target.value
-	this.setState(change)
-    }
-
-    onSubmit(event) {
+    function onSubmit(event) {
 	event.preventDefault()
 	// TODO display error when user enters more than one file.
 	console.log("Submitting...")
-	if (this.fileInput.current.files.length > 0 && this.state.faculty != undefined) {
-	    const inputFile = this.fileInput.current.files[0]
+	if (fileInput.current.files.length > 0 && faculty != undefined) {
+	    const inputFile = fileInput.current.files[0]
 	    const data = new FormData()
 	    data.append("schedule", inputFile)
-	    data.append("faculty", this.state.faculty)
-	    console.log(this.props.token)
+	    data.append("faculty", faculty)
+	    console.log(props.token)
 	    axios({
 		method: "post",
 		url: "/schedule/upload",
 		data,
 		headers: {
 		    "Content-Type": "multipart/form-data",
-		    "Authorization": this.props.token
+		    "Authorization": props.token
 		},
 	    }).then(res => {
-		this.props.onSuccess(showStates.results)
+		props.onSuccess(showStates.results)
 	    }).catch(err => {
 		console.error(err)
 	    })
 	}
     }
 
-    render() {
-	const optionElements = this.state.faculties.map((faculty) => {
-	    const optionName = `facultyOf${faculty}`
-	    return (
-		<option name={optionName} className="facultySelect--option" value={faculty}>
-		    Faculty of {faculty}
-		</option>
-	    )
-	})
-
+    const facultyOptionElements = faculties.map((facultyName) => {
+	const optionName = `facultyOf${facultyName}`
 	return (
-	    <form className="user_info--form" onSubmit={this.onSubmit}>
-		<span>
-		    <label>Faculty</label>
-		    <select name="faculty" id="faculty--select" onChange={this.inputChange}>
-			<option disabled selected> -- select an option -- </option>
-			{optionElements}
-		    </select>
-		</span>
-		<span className="spacer--span"></span>
-		<span><label>Schedule </label><input type="file" name="schedule" ref={this.fileInput} /></span>
-		<span className="spacer--span"></span>
-		<button type="submit" className="submit--button">Submit</button>
-	    </form>
+	    <option name={optionName} className="facultySelect--option" value={facultyName}>
+		Faculty of {facultyName}
+	    </option>
 	)
-    }
+    })
+
+    return (
+	<form className="user_info--form" onSubmit={onSubmit}>
+	    <span>
+		<label>Faculty</label>
+		<select name="faculty" id="faculty--select" onChange={event => setFaculty(event.target.value)}>
+		    <option disabled selected> -- select an option -- </option>
+		    {facultyOptionElements}
+		</select>
+	    </span>
+	    <span className="spacer--span"></span>
+	    <span><label>Schedule </label><input type="file" name="schedule" ref={fileInput} /></span>
+	    <span className="spacer--span"></span>
+	    <button type="submit" className="submit--button">Submit</button>
+	</form>
+    )
 }
+
 
 export default App;
