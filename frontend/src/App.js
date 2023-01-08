@@ -109,7 +109,7 @@ function Profile(props) {
 
 
 function CompatiabilityList(props) {
-    const [compatiabilityResults, setResults] = useState([1,2,3,4,5])
+    const [compatiabilityResults, setResults] = useState([])
     
     useEffect(() => {
 	axios({
@@ -121,7 +121,10 @@ function CompatiabilityList(props) {
 	    },
 	}).then(response => {
 	    console.log(response)
-	    setResults(response.data)
+	    const keys = Object.keys(response.data)
+	    const records = keys.map(key => response.data[key])
+	    records.sort((r1, r2) => r1.count > r2.count)
+	    setResults(records)
 	}).catch(err => {
 	    console.error(err)
 	})
