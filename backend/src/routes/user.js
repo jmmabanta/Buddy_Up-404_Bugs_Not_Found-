@@ -49,13 +49,6 @@ router.get("/", async (req, res) => {
     if (matchedUser.googleID != userData["sub"]) {
       if (matchedUser.googleID in matchedUsers) {
         matchedUsers[matchedUser.googleID].count++;
-      } else {
-        matchedUsers[matchedUser.googleID] = {
-          name: matchedUser.name,
-          email: matchedUser.email,
-          picture: matchedUser.picture,
-          count: 1,
-        };
       }
     }
   }

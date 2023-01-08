@@ -6,7 +6,6 @@ const port = 3000;
 
 app.use(cors({ credentials: true, origin: true }));
 
-const test = require("./routes/test");
 const schedule = require("./routes/schedule");
 const login = require("./routes/login");
 const user = require("./routes/user");
@@ -18,7 +17,6 @@ app.use(
   })
 );
 
-app.use("/api", test);
 app.use("/login", login);
 
 // Protects the following routes so that a login is needed

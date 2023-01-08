@@ -20,6 +20,8 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     ports:
       - 3000:3000
+    depends_on:
+      - db
   frontend:
     build:
       context: ./frontend
@@ -32,6 +34,9 @@ services:
       - REACT_APP_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
     ports:
       - 8000:8000
+    depends_on:
+      - db
+      - backend
 
 volumes:
   dbData:
