@@ -64,4 +64,10 @@ router.get("/", async (req, res) => {
   res.json(matchedUsers);
 });
 
+router.get("/mydata", async (req, res) => {
+  const googleData = await getUserData(req.get("Authorization"));
+  const myUser = await User.findOne({ googleID: googleData["sub"] });
+  res.json(myUser);
+});
+
 module.exports = router;
