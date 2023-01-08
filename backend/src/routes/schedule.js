@@ -36,7 +36,6 @@ const updateUserData = async (googleID, newData) => {
 };
 
 router.post("/upload", async (req, res) => {
-  console.log(req.body.faculty);
   const file = req.files.schedule;
   const token = req.get("Authorization");
   const userData = await getUserData(token);
