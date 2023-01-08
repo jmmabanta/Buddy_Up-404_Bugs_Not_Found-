@@ -1,16 +1,32 @@
-import logo from "./logo.svg"
-import "./App.css"
-import React from "react"
-import axios from "axios"
+import logo from "./logo.svg";
+import "./App.css";
+import React, { useState, Component } from "react";
+import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
 
 function App() {
-    return (
-	<div className="App">
-	    <HomePage />
-	</div>
-    )
+  return (
+    <div className="App">
+      <HomePage />
+    </div>
+  );
 }
 
+const LoginButton = () => {
+  // From: https://github.com/MomenSherif/react-oauth/issues/12#issuecomment-1131408898
+  // Exchange Google OAuth tokens with Express Backend
+  const login = useGoogleLogin({
+    onSuccess: async ({ code }) => {
+      const userData = await axios.post("/login", {
+        code,
+      });
+      console.log(userData);
+    },
+    onError: (err) => console.err(err),
+    flow: "auth-code",
+  });
+  return <button onClick={() => login()}>Sign In With Google</button>;
+};
 
 const showStates = {
     landing: 1,
@@ -19,20 +35,31 @@ const showStates = {
 }
 
 
-class HomePage extends React.Component {
+function HomePage() {
+    
+}
+
+class HomePage extends Component {
     constructor(props) {
 	super(props)
 	this.state = {
-	    show: showStates.form
+	    show: showStates.landing
 	}
 	this.changeShow = this.changeShow.bind(this)
+	this.signIn = this.signIn.bind(this)
     }
 
     signIn(response) {
-	// axios.get("http://localhost:3000/login").then(response => {
-	//     console.log(response)
-	// })
-	console.log("WIP")
+	useGoogleLogin({
+	    onSuccess: async ({ code }) => {
+		const userData = await axios.post("/login", {
+		    code,
+		});
+		console.log(userData);
+	    },
+	    onError: (err) => console.err(err),
+	    flow: "auth-code",
+	})()
     }
 
     changeShow(newState) {
@@ -66,7 +93,7 @@ class HomePage extends React.Component {
 }
 
 
-class Landing extends React.Component {
+class Landing extends Component {
     render() {
 	return (
 	    <main className="landing">
@@ -79,7 +106,7 @@ class Landing extends React.Component {
 }
 
 
-class Profile extends React.Component {
+class Profile extends Component {
     constructor(props) {
 	super(props)
     }
@@ -92,7 +119,7 @@ class Profile extends React.Component {
 }
 
 
-class CompatiabilityList extends React.Component {
+class CompatiabilityList extends Component {
     constructor(props) {
 	super(props)
     }
@@ -104,8 +131,7 @@ class CompatiabilityList extends React.Component {
     }
 }
 
-
-class ScheduleForm extends React.Component {
+class ScheduleForm extends Component {
     constructor(props) {
 	super(props)
 	this.state = {
@@ -157,7 +183,6 @@ class ScheduleForm extends React.Component {
 	    }).catch(err => {
 		console.error(err)
 	    })
-
 	}
     }
 
@@ -189,6 +214,4 @@ class ScheduleForm extends React.Component {
     }
 }
 
-
-export default App
-
+export default App;
