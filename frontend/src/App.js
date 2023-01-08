@@ -1,9 +1,12 @@
-import logo from "./logo.svg";
-import "./App.css";
-import React, { useState, useEffect, Component } from "react";
-import axios from "axios";
-import { useGoogleLogin } from "@react-oauth/google";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.css"
+import React, { useState, useEffect } from "react"
+import axios from "axios"
+import { useGoogleLogin } from "@react-oauth/google"
 import userNotFound from "./userNotFound"
+import Form from "react-bootstrap/Form"
+import Button from "react-bootstrap/Button"
 
 
 // API ENDPOINTS
@@ -216,20 +219,33 @@ function ScheduleForm(props) {
 	)
     })
 
+    const formTextStyle = {
+	fontSize: "20px",
+	marginTop: "20px"
+    }
+
+    const buttonStyle = {
+	marginTop: "50px"
+    }
+
+    // Bug: creating account but filling out form in separate session doesn't show results??
     return (
-	<form className="user_info--form" onSubmit={onSubmit}>
-	    <span>
-		<label>Faculty</label>
-		<select name="faculty" id="faculty--select" onChange={event => setFaculty(event.target.value)}>
-		    <option disabled selected> -- select an option -- </option>
-		    {facultyOptionElements}
-		</select>
-	    </span>
-	    <span className="spacer--span"></span>
-	    <span><label>Schedule </label><input type="file" name="schedule" ref={fileInput} /></span>
-	    <span className="spacer--span"></span>
-	    <button type="submit" className="submit--button">Submit</button>
-	</form>
+	<Form className="user_info--form" >
+	    <fieldset>
+		<Form.Group>
+		    <Form.Label style={formTextStyle}>Faculty </Form.Label>
+		    <Form.Select name="faculty" onChange={event => setFaculty(event.target.value)}>
+			<option disabled selected> -- select an option -- </option>
+			{facultyOptionElements}
+		    </Form.Select>
+		</Form.Group>
+		<Form.Group>
+		    <Form.Label style={formTextStyle}>Schedule </Form.Label>
+		    <Form.Control type="file" ref={fileInput} />
+		</Form.Group>
+		<Button variant="primary" style={buttonStyle} onClick={onSubmit}>Submit</Button>
+	    </fieldset>
+	</Form>
     )
 }
 
