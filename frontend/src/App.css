@@ -53,25 +53,25 @@
 
 
 /* Landing */
-.landing {
+.landing--main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.landing .title--h1 {
+.landing--main .title--h1 {
     font-size: 70px; 
     margin-bottom: 40px;
 }
 
-.landing .site_description--p {
+.landing--main .site_description--p {
     font-size: 16px;
     max-width: 600px;
     margin-bottom: 40px;
 }
 
-.landing .sign_in--button {
+.landing--main .sign_in--button {
     padding: 10px 20px;
     cursor: pointer;
     background-color: white;
@@ -140,3 +140,43 @@
 
 
 
+/* Results  */
+.results--main {
+    display: flex;
+    background-color: blue;
+}
+
+.profile--div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+}
+
+.profile--div p {
+    font-size: 17px;
+}
+
+.profile--div img {
+    max-width: 96px;
+    max-height: 96px;
+}
+
+
+.compat_list--div {
+    background-color: green;
+    font-size: 20px;
+}
+
+.compat_list--div ul {
+    list-style-type: none;
+}
+
+.compat_list--div ul li {
+    border: solid 3px black;
+}
+
+.compat_list--div h1 {
+    font-size: 30px;
+}

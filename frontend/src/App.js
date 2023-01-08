@@ -3,6 +3,13 @@ import "./App.css";
 import React, { useState, useEffect, Component } from "react";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
+import userNotFound from "./userNotFound"
+
+
+// API ENDPOINTS
+// ======================================================
+// /user - get all users.
+// /schedule/upload - upload form data here.
 
 
 function App() {
@@ -23,7 +30,7 @@ const showStates = {
 
 function HomePage() {
     const [show, setShow] = useState(showStates.landing)
-    const [user, setUser] = useState(undefined)
+    const [user, setUser] = useState({})
     
     const login = useGoogleLogin({
 	onSuccess: async ({ code }) => {
@@ -43,25 +50,14 @@ function HomePage() {
 	flow: "auth-code",
     })
 
-    let display = []
-    switch (show) {
-    case showStates.landing:
-	display.push(<Landing signIn={() => login()} />)
-	break
-    case showStates.form:
-	display.push(<ScheduleForm onSuccess={(newShow) => setShow(newShow)} token={user.token} />)
-	break
-    case showStates.results:
-	display.push(<Profile />)
-	display.push(<CompatiabilityList />)
-	break
-    default:
-	display.push(<p>404</p>)
-    }
+    let pages = {}
+    pages[showStates.landing] = <Landing signIn={() => login()} />
+    pages[showStates.form] = <ScheduleForm onSuccess={(newShow) => setShow(newShow)} token={user.token} />
+    pages[showStates.results] = <Results user={user} />
 
     return (
 	<main className="homepage">
-	    {display}
+	    {pages[show]}
 	</main>
     )
 }
@@ -70,7 +66,7 @@ function HomePage() {
 class Landing extends Component {
     render() {
 	return (
-	    <main className="landing">
+	    <main className="landing--main">
 		<h1 className="title--h1">BuddyUp</h1>
 		<p className="site_description--p">A modern study buddy finder using cutting machine learning quantum computing algorithms to give you the most compatiable study buddies EVER.</p>
 		<button className="sign_in--button" onClick={this.props.signIn}>Sign In</button>
@@ -80,30 +76,75 @@ class Landing extends Component {
 }
 
 
-class Profile extends Component {
-    constructor(props) {
-	super(props)
-    }
+function Results(props) {
+    let resultsList = props.user ? <CompatiabilityList token={props.user.token} /> : <p>Please Sign-In</p>
 
-    render() {
-	return (
-	    <p>Profile WIP</p>
-	)
-    }
+    return (
+	<main className="results--main">
+	    <Profile user={props.user} />
+	    {resultsList}
+	</main>
+    )
 }
 
 
-class CompatiabilityList extends Component {
-    constructor(props) {
-	super(props)
+function Profile(props) {
+    let imageSrc, name, email
+    if (props.user) {
+	imageSrc = props.user.picture
+	name = props.user.name
+	email = props.user.email
+    } else {
+	imageSrc = userNotFound
+	name = "User's fame not found"
+	email = "User's email not found"
     }
 
-    render() {
-	return (
-	    <p>CompatiabilityList WIP</p>
-	)
-    }
+    return (
+	<div className="profile--div">
+	    <img src={imageSrc} />
+	    <p>{name}</p>
+	    <p>{email}</p>
+	</div>
+    )
 }
+
+
+function CompatiabilityList(props) {
+    const [compatiabilityResults, setResults] = useState([1,2,3,4,5])
+    
+    useEffect(() => {
+	axios({
+	    method: "get",
+	    url: "/user",
+	    headers: {
+		"Content-Type": "multipart/form-data",
+		"Authorization": props.token
+	    },
+	}).then(response => {
+	    console.log(response)
+	    setResults(response.data)
+	}).catch(err => {
+	    console.error(err)
+	})
+    }, [])
+
+    let personListElements = []
+    personListElements = compatiabilityResults.map(person => (
+	<li><Profile user={person} /></li>
+    ))
+
+    return (
+	<div className="compat_list--div">
+	    <h1>Compatiability Results</h1>
+	    <ul>
+		{personListElements}
+	    </ul>
+	</div>
+    )
+}
+
+
 
 class ScheduleForm extends Component {
     constructor(props) {
