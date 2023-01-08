@@ -27,10 +27,24 @@ const User = new mongoose.model("User", UserSchema);
 
 const jsonParser = bodyParser.json();
 
-// Verify login and return jwt token
+// Verify login and return user info
 router.post("/", jsonParser, async (req, res) => {
   const { tokens } = await authClient.getToken(req.body.code);
-  res.json(tokens);
+  const payload = await getUserData(tokens.id_token);
+  User.findOrCreate(
+    {
+      googleID: payload["sub"],
+    },
+    {
+      name: payload["name"],
+      email: payload["email"],
+      picture: payload["picture"],
+      courses: [],
+      faculty: "",
+    }
+  );
+  payload.token = tokens.id_token;
+  res.json(payload);
 });
 
 module.exports = router;
