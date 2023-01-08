@@ -4,10 +4,7 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 
-const dotenv = require("dotenv");
-dotenv.config();
-
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 
 const test = require("./routes/test");
 const schedule_parse = require("./routes/schedule_parse");

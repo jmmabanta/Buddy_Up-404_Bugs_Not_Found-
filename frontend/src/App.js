@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
 import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
 
 function App() {
   return (
@@ -11,13 +12,23 @@ function App() {
   );
 }
 
-class HomePage extends React.Component {
-  signIn(response) {
-    axios.get("/login").then((response) => {
-      console.log(response);
-    });
-  }
+const LoginButton = () => {
+  // From: https://github.com/MomenSherif/react-oauth/issues/12#issuecomment-1131408898
+  // Exchange Google OAuth tokens with Express Backend
+  const login = useGoogleLogin({
+    onSuccess: async ({ code }) => {
+      const userData = await axios.post("/login", {
+        code,
+      });
+      console.log(userData);
+    },
+    onError: (err) => console.err(err),
+    flow: "auth-code",
+  });
+  return <button onClick={() => login()}>Sign In With Google</button>;
+};
 
+class HomePage extends React.Component {
   render() {
     return (
       <main id="homepage">
@@ -27,7 +38,7 @@ class HomePage extends React.Component {
           computing algorithms to give you the most compatiable study buddies
           EVER.
         </p>
-        <button onClick={this.signIn}>Sign In</button>
+        <LoginButton />
       </main>
     );
   }
