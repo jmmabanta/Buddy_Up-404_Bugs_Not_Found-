@@ -1,6 +1,8 @@
 const express = require("express");
 const ical = require("ical");
+const { User } = require("../models.js");
 const router = express.Router();
+const { getUserData } = require("../util.js");
 
 /**
  * getCourses
@@ -12,9 +14,7 @@ const getCourses = (scheduleData) => {
   for (let entry in scheduleData) {
     const course = scheduleData[entry];
     if (course.hasOwnProperty("summary")) {
-      courses.indexOf(course.summary) === -1
-        ? courses.push(course.summary)
-        : console.log("Course already exists!");
+      if (courses.indexOf(course.summary) === -1) courses.push(course.summary);
     }
   }
   return courses.map((course) => {
@@ -28,11 +28,24 @@ const getCourses = (scheduleData) => {
   });
 };
 
-router.post("/upload", (req, res) => {
+const updateUserData = async (googleID, newData) => {
+  const user = await User.findOne({ googleID: googleID });
+  user.faculty = newData.faculty;
+  user.courses = newData.courses;
+  await user.save().then((savedUser) => savedUser);
+};
+
+router.post("/upload", async (req, res) => {
+  console.log(req.body.faculty);
   const file = req.files.schedule;
-  console.log(file);
+  const token = req.get("Authorization");
+  const userData = await getUserData(token);
   const scheduleData = ical.parseICS(file.data.toString("utf8"));
-  res.send(getCourses(scheduleData));
+  const newData = {
+    faculty: req.body.faculty,
+    courses: getCourses(scheduleData),
+  };
+  res.json(updateUserData(userData["sub"], newData));
 });
 
 module.exports = router;
