@@ -36,15 +36,16 @@ const updateUserData = async (googleID, newData) => {
 };
 
 router.post("/upload", async (req, res) => {
-  const file = req.files.schedule;
-  const token = req.get("Authorization");
-  const userData = await getUserData(token);
-  const scheduleData = ical.parseICS(file.data.toString("utf8"));
-  const newData = {
-    faculty: req.body.faculty,
-    courses: getCourses(scheduleData),
-  };
-  res.json(updateUserData(userData["sub"], newData));
+    const file = req.files.schedule;
+    const token = req.get("Authorization");
+    const userData = await getUserData(token);
+    const scheduleData = ical.parseICS(file.data.toString("utf8"));
+    const newData = {
+	faculty: req.body.faculty,
+	courses: getCourses(scheduleData),
+    };
+    updateUserData(userData["sub"], newData)
+    res.json(newData);
 });
 
 module.exports = router;
