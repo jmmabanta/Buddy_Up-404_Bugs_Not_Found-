@@ -3,6 +3,7 @@ import React from "react"
 import axios from "axios"
 import Landing from "../components/Landing.js"
 import { useGoogleLogin } from "@react-oauth/google"
+import "./HomePage.css"
 
 
 function HomePage(props) {
@@ -37,7 +38,7 @@ function HomePage(props) {
     })
 
     return (
-	<main className="homepage">
+	<main className="homepage--main">
 	    <Landing signIn={() => signIn()} />
 	</main>
     )

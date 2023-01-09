@@ -1,0 +1,26 @@
+
+.landing--main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.landing--main .title--h1 {
+    font-size: 70px; 
+    margin-bottom: 40px;
+}
+
+.landing--main .site_description--p {
+    font-size: 16px;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.landing--main .sign_in--button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 20px;
+    border: solid 1px;
+}

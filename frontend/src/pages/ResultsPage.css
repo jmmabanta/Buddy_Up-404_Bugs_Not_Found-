@@ -27,6 +27,17 @@
 
 .courses--div ul li {
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.courses--div ul li:last-child {
+    margin-bottom: 0;
+}
+
+.courses--div ul li p {
+    margin: 0 ;
 }
 
 .courses--div ul li::before {
@@ -38,6 +49,18 @@
     margin: 0 15px;
     content: ' ';
     border-radius: 30%;
+}
+
+.course_name--p {
+    
+}
+
+.course_section--p {
+    
+}
+
+.course_type--p {
+    
 }
 
 .profile_buttons--div button {

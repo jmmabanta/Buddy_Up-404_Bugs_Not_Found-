@@ -24,9 +24,10 @@ function App() {
 	page = <FormPage onSuccess={res => setUser({...user, ...res})}
 			 token={user.token} />
     } else {
-	page = <ResultsPage user={user} />
+	page = <ResultsPage user={user}
+			    signOut={() => setUser({})}
+			    token={user.token} />
     }
-
 
     return (
 	<div className="App">
