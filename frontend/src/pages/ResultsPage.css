@@ -1,0 +1,59 @@
+
+.results--main {
+    display: flex;
+    background-color: blue;
+    text-align: left;
+}
+
+.profile_section--div {
+    display: flex;
+    flex-direction: column;
+    background-color: green;
+    padding: 20px;
+}
+
+.profile_section--div h1 {
+    font-size: 40px;
+}
+
+.courses--div {
+    margin-top: 10px;
+}
+
+.courses--div ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.courses--div ul li {
+    font-size: 20px;
+}
+
+.courses--div ul li::before {
+    display: inline-block;
+    vertical-align: middle;
+    width: 14px;
+    height: 4px;
+    background-color: #000000;
+    margin: 0 15px;
+    content: ' ';
+    border-radius: 30%;
+}
+
+.profile_buttons--div button {
+    display: block;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 3px;
+    border: none;
+    background-color: white;
+    margin: 15px 0;
+}
+
+.matches--div {
+    padding: 20px;
+}
+
+.matches--div h1 {
+    font-size: 40px;
+}

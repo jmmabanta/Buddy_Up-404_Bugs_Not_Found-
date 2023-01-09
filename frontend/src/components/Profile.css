@@ -1,0 +1,26 @@
+
+.profile--div {
+    display: flex;
+    background-color: red;
+    padding: 20px;
+}
+
+.profile--div p {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.profile--div img {
+    max-width: 96px;
+    max-height: 96px;
+    border-radius: 100%;
+}
+
+.profile_info--div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    margin-left: 15px;
+}
