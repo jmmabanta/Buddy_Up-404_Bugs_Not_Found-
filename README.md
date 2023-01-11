@@ -12,8 +12,8 @@ Requirements: Docker
 ```
 GOOGLE_CLIENT_ID="Insert Google Client ID Here"
 GOOGLE_CLIENT_SECRET="Insert Google Client Secret Here"
-
 ```
 
 3. Run `docker-compose up`
 4. Visit http://localhost:8000 to see the frontend
+
