@@ -1,13 +1,17 @@
 
-
 import React, { useEffect, useState } from "react"
 import axios from "axios"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import CompatibilityList from "../components/CompatibilityList.js"
 import Profile from "../components/Profile.js"
 import "./ResultsPage.css"
 
 
 function ResultsPage(props) {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const user = useSelector(state => state.user)
     const [compatResults, setResults] = useState([])
     
     useEffect(() => {
@@ -16,7 +20,7 @@ function ResultsPage(props) {
 	    url: "/user",
 	    headers: {
 		"Content-Type": "multipart/form-data",
-		"Authorization": props.token
+		"Authorization": user.token
 	    },
 	}).then(response => {
 	    console.log(response)
@@ -29,27 +33,31 @@ function ResultsPage(props) {
 	})
     }, [])
 
-    function editProfile() {
-	console.log("WIP")
+    function signOut() {
+	dispatch({
+	    type: "user/setUser",
+	    payload: {}
+	})
+	navigate("/")
     }
 
-    let resultsListElements = props.user ?
+    let resultsListElements = user.token ?
 	<CompatibilityList results={compatResults} /> :
 	(<p>Please Sign-In</p>)
-    // TODO display error message when zero courses are found
-    let coursesElements = props.user.courses.map(course => (
+    let coursesElements = user.courses ? user.courses.map(course => (
 	<li>
 	    <p className="course_name--p">{course.name}</p>
 	    <p className="course_section--p">{course.section}</p>
 	    <p className="course_type--p">{course.type}</p>
 	</li>
-    ))
+    )) : <p>Please edit your profile and enter your courses.</p>
+    let profile = user.token ? <Profile user={user} /> : <p>Please Sign-in</p>
 
     return (
 	<main className="results--main">
 	    <div className="profile_section--div">
 		<h1>My Profile</h1>
-		<Profile user={props.user} />
+		{profile}
 		<div className="courses--div">
 		    <h2>Courses</h2>
 		    <ul>
@@ -57,8 +65,8 @@ function ResultsPage(props) {
 		    </ul>
 		</div>
 		<div className="profile_buttons--div">
-		    <button onClick={() => editProfile()}>Edit Profile</button>
-		    <button onClick={props.signOut}>Sign Out</button>
+		    <button onClick={() => navigate("/form")}>Edit Profile</button>
+		    <button onClick={signOut}>Sign Out</button>
 		</div>
 	    </div>
 	    <div className="matches--div">
