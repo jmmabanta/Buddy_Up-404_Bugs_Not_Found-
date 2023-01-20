@@ -45,11 +45,7 @@ function ResultsPage(props) {
 	<CompatibilityList results={compatResults} /> :
 	(<p>Please Sign-In</p>)
     let coursesElements = user.courses ? user.courses.map(course => (
-	<li>
-	    <p className="course_name--p">{course.name}</p>
-	    <p className="course_section--p">{course.section}</p>
-	    <p className="course_type--p">{course.type}</p>
-	</li>
+	<li>{course.name} {course.section}</li>
     )) : <p>Please edit your profile and enter your courses.</p>
     let profile = user.token ? <Profile user={user} /> : <p>Please Sign-in</p>
 

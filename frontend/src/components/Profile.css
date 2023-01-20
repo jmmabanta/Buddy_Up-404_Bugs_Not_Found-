@@ -1,8 +1,9 @@
 
 .profile--div {
     display: flex;
-    background-color: red;
+    background-color: #c1cfdd;
     padding: 20px;
+    border-radius: 10px;
 }
 
 .profile--div p {

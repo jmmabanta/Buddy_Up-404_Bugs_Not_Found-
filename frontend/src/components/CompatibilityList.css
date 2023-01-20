@@ -1,16 +1,11 @@
 
 .compat_list--div {
-    background-color: green;
     font-size: 20px;
 }
 
 .compat_list--div ul {
     list-style-type: none;
     padding: 0;
-}
-
-.compat_list--div ul li {
-    border: solid 3px black;
 }
 
 .compat_list--div h1 {
